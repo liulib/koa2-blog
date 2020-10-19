@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:29:22
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-19 16:44:20
+ * @LastEditTime : 2020-10-19 23:18:06
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -20,13 +20,13 @@ User.init(
             primaryKey: true,
             allowNull: false,
             autoIncrement: true,
-            comment: 'id'
+            comment: 'id',
         },
         username: {
             type: DataTypes.STRING(50),
             allowNull: false,
             unique: true,
-            comment: '用户名'
+            comment: '用户名',
         },
         password: {
             type: DataTypes.STRING,
@@ -35,27 +35,27 @@ User.init(
                 const salt = bcrypt.genSaltSync(10)
                 const hash = bcrypt.hashSync(val, salt)
                 this.setDataValue('password', hash)
-            }
+            },
         },
         email: {
             type: DataTypes.STRING(50),
-            comment: '邮箱'
+            comment: '邮箱',
         },
         nickname: {
             type: DataTypes.STRING(20),
             allowNull: true,
-            comment: '昵称'
+            comment: '昵称',
         },
         role: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
-            comment: '用户角色：true - admin, false - 普通用户'
-        }
+            comment: '用户角色：true - admin, false - 普通用户',
+        },
     },
     {
         sequelize,
         modelName: 'User',
-        tableName: 'user'
+        tableName: 'user',
     }
 )
 
