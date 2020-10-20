@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-19 15:26:37
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-19 22:39:20
+ * @LastEditTime : 2020-10-20 09:42:05
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -20,54 +20,49 @@ Article.init(
             primaryKey: true,
             allowNull: false,
             autoIncrement: true,
-            comment: 'id',
+            comment: 'id'
         },
         title: {
             type: DataTypes.STRING(60),
             allowNull: false,
-            comment: '标题',
+            comment: '标题'
         },
         brief: {
             type: DataTypes.STRING(),
             allowNull: false,
             defaultValue: '',
-            comment: '简介',
+            comment: '简介'
         },
         content: {
             type: DataTypes.STRING(),
             allowNull: false,
-            comment: '内容',
+            comment: '内容'
         },
         page_views: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
-            comment: '浏览数',
+            comment: '浏览数'
         },
         keyword: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: '',
-            comment: '文章关键字',
-        },
+            comment: '文章关键字'
+        }
     },
     {
         sequelize,
         modelName: 'Article',
-        tableName: 'article',
+        tableName: 'article'
     }
 )
 
 // 文章关联分类
-Category.hasMany(Article, {
-    foreignKey: 'category_id',
-    sourceKey: 'id',
-    as: 'article',
-})
 Article.belongsTo(Category, {
     foreignKey: 'category_id',
     targetKey: 'id',
-    as: 'category',
+    as: 'category'
 })
 
 export default Article

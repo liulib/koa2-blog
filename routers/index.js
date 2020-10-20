@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-13 00:07:02
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 00:04:17
+ * @LastEditTime : 2020-10-20 09:44:43
  */
 // import fs from 'fs'
 
@@ -17,15 +17,15 @@
 import Router from 'koa-router'
 // 加载路由
 import User from './user'
-import Token from './token'
 import Category from './category'
 import Article from './article'
+import Comment from './comment'
 
 const router = new Router()
 
 router.use('/user', User.routes(), User.allowedMethods())
-router.use('/token', Token.routes(), Token.allowedMethods())
 router.use('/category', Category.routes(), Category.allowedMethods())
 router.use('/article', Article.routes(), Article.allowedMethods())
+router.use('/comment', Comment.routes(), Comment.allowedMethods())
 
 export default router

@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 22:36:01
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-19 15:18:24
+ * @LastEditTime : 2020-10-20 16:29:52
  */
 export default {
     PORT: 3838, // 项目运行端口
@@ -29,5 +29,16 @@ export default {
             },
             timezone: '+08:00'
         }
+    },
+    GITHUB: {
+        client_id: '8cfd838ae6ab49046df7',
+        client_secret: '19e698188b8ebd8aa4ef5d3e51550ecc7f85247c',
+        access_token_url: 'https://github.com/login/oauth/access_token',
+        fetch_user_url: 'https://api.github.com/user', // 用于 oauth2
+        fetch_user: 'https://api.github.com/users/' // fetch user url https://api.github.com/users/gershonv
+    },
+    TOKEN: {
+        secret: 'liu-li-b-test', // secret is very important!
+        expiresIn: '720h' // token 有效期
     }
 }
