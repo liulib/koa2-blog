@@ -3,13 +3,13 @@
  * @Author       : liulib
  * @Date         : 2020-10-20 16:30:06
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 16:34:07
+ * @LastEditTime : 2020-10-20 23:51:03
  */
 import jwt from 'jsonwebtoken'
 import { TOKEN } from '../config'
 
 //创建token
-const createToken = info => {
+const createToken = (info) => {
     const token = jwt.sign(info, TOKEN.secret, { expiresIn: TOKEN.expiresIn })
     return token
 }
@@ -22,7 +22,7 @@ const checkToken = (ctx, roleList = []) => {
             if (err) {
                 return false
             } else if (decoded) {
-                return !!roleList.find(item => item.role === decoded.role)
+                return !!roleList.find((item) => item.role === decoded.role)
             }
             return false
         })

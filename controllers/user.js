@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 17:28:42
+ * @LastEditTime : 2020-10-20 23:35:25
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -34,7 +34,7 @@ class UserController {
                 username: Joi.string().required(),
                 password: Joi.string().required(),
                 email: Joi.string().email().required(),
-                nickname: Joi.string()
+                nickname: Joi.string(),
             })
         )
         if (val) {
@@ -50,9 +50,14 @@ class UserController {
                 ctx.throw(403, '用户名已被占用')
             }
             // 密码加密
-            const newPassword = encrypt(password)
+            const slatPassword = encrypt(password)
             // 创建用户
-            await User.create({ username, newPassword, email, nickname })
+            await User.create({
+                username,
+                password: slatPassword,
+                email,
+                nickname,
+            })
 
             ctx.body = '用户创建成功'
         }
@@ -76,16 +81,16 @@ class UserController {
             ctx.request.body,
             Joi.object({
                 username: Joi.string().required(),
-                password: Joi.string().required()
+                password: Joi.string().required(),
             })
         )
         if (val) {
             const { username, password } = ctx.request.body
-            const user = await UserModel.findOne({
+            const user = await User.findOne({
                 where: {
                     // $or: { email: account, username: account }
-                    username: username
-                }
+                    username: username,
+                },
             })
 
             if (!user) {
@@ -101,14 +106,14 @@ class UserController {
                     const token = createToken({
                         username: user.username,
                         userId: id,
-                        role
+                        role,
                     }) // 生成 token
                     // ctx.client(200, '登录成功', { username: user.username, role, userId: id, token })
                     ctx.body = {
                         username: user.username,
                         role,
                         userId: id,
-                        token
+                        token,
                     }
                 }
             }
@@ -119,7 +124,7 @@ class UserController {
         const result = await axios.post(GITHUB.access_token_url, {
             client_id: GITHUB.client_id,
             client_secret: GITHUB.client_secret,
-            code
+            code,
         })
         console.log(result)
 
@@ -135,7 +140,7 @@ class UserController {
         //     let target = await UserController.find({ id: githubInfo.id }) // 在数据库中查找该用户是否存在
 
         //     if (!target) {
-        //         target = await UserModel.create({
+        //         target = await User.create({
         //             id: githubInfo.id,
         //             username: githubInfo.name || githubInfo.username,
         //             github: JSON.stringify(githubInfo),

@@ -3,17 +3,17 @@
  * @Author       : liulib
  * @Date         : 2020-09-13 22:54:16
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-19 16:59:29
+ * @LastEditTime : 2020-10-20 23:50:32
  */
 import Sequelize from 'sequelize'
-import config from '../config/index'
+import { DATABASE } from '../config/index'
 
 const sequelize = new Sequelize(
-    config.DATABASE.database,
-    config.DATABASE.user,
-    config.DATABASE.password,
+    DATABASE.database,
+    DATABASE.user,
+    DATABASE.password,
     {
-        ...config.DATABASE.options
+        ...DATABASE.options,
     }
 )
 
@@ -22,7 +22,7 @@ sequelize
     .then(() => {
         console.log('Connection has been established successfully.')
     })
-    .catch(err => {
+    .catch((err) => {
         console.error('Unable to connect to the database:', err)
     })
 

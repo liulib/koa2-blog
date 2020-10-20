@@ -3,10 +3,10 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:04:08
  * @LastEditors  : liulib
- * @LastEditTime : 2020-09-19 13:03:49
+ * @LastEditTime : 2020-10-20 23:50:03
  */
 import Koa from 'koa'
-import config from './config/index'
+import { PORT } from './config/index'
 import koaBody from 'koa-body'
 import context from './utils/context'
 
@@ -27,9 +27,9 @@ app.use(async (ctx) => {
     ctx.body = 'hello koa2'
 })
 
-app.listen(config.PORT, () => {
+app.listen(PORT, () => {
     console.log(`===============================================
-    app is running at http://0.0.0.0:${config.PORT}
+    app is running at http://127.0.0.1:${PORT}
 ===============================================
     `)
 })
