@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 23:35:25
+ * @LastEditTime : 2020-10-21 14:28:19
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -20,8 +20,43 @@ class UserController {
      * @description: 获取用户列表
      */
     static async getList(ctx) {
-        const result = await User.findAll()
-        ctx.body = result
+        // 验证参数
+        const val = await ctx.validate(
+            ctx.request.body,
+            Joi.object({
+                username: Joi.string().allow(''),
+                startTime: Joi.string(),
+                endTime: Joi.string(),
+                page: Joi.number(),
+                pageSize: Joi.number()
+            })
+        )
+        if (val) {
+            const {
+                page = 1,
+                pageSize = 10,
+                username,
+                startTime,
+                endTime
+            } = ctx.query
+            const where = {}
+            if (username) {
+                where.username = {}
+                where.username['$like'] = `%${username}%`
+            }
+            if (startTime && endTime) {
+                where.createdAt = { $between: [startTime, endTime] }
+            }
+            const result = await User.findAndCountAll({
+                where,
+                offset: (page - 1) * pageSize,
+                limit: parseInt(pageSize),
+                row: true,
+                order: [['createdAt', 'DESC']],
+                attributes: { exclude: ['password'] }
+            })
+            ctx.success(200, result, '查询成功')
+        }
     }
     /**
      * @description: 注册
@@ -34,7 +69,7 @@ class UserController {
                 username: Joi.string().required(),
                 password: Joi.string().required(),
                 email: Joi.string().email().required(),
-                nickname: Joi.string(),
+                nickname: Joi.string()
             })
         )
         if (val) {
@@ -50,16 +85,16 @@ class UserController {
                 ctx.throw(403, '用户名已被占用')
             }
             // 密码加密
-            const slatPassword = encrypt(password)
+            const saltPassword = encrypt(password)
             // 创建用户
             await User.create({
                 username,
-                password: slatPassword,
+                password: saltPassword,
                 email,
-                nickname,
+                nickname
             })
-
-            ctx.body = '用户创建成功'
+            // 返回数据
+            ctx.success(200, '用户创建成功', null)
         }
     }
     /**
@@ -81,7 +116,7 @@ class UserController {
             ctx.request.body,
             Joi.object({
                 username: Joi.string().required(),
-                password: Joi.string().required(),
+                password: Joi.string().required()
             })
         )
         if (val) {
@@ -89,8 +124,8 @@ class UserController {
             const user = await User.findOne({
                 where: {
                     // $or: { email: account, username: account }
-                    username: username,
-                },
+                    username: username
+                }
             })
 
             if (!user) {
@@ -106,15 +141,19 @@ class UserController {
                     const token = createToken({
                         username: user.username,
                         userId: id,
-                        role,
+                        role
                     }) // 生成 token
                     // ctx.client(200, '登录成功', { username: user.username, role, userId: id, token })
-                    ctx.body = {
-                        username: user.username,
-                        role,
-                        userId: id,
-                        token,
-                    }
+                    ctx.success(
+                        200,
+                        {
+                            username: user.username,
+                            role,
+                            userId: id,
+                            token
+                        },
+                        '登录成功'
+                    )
                 }
             }
         }
@@ -124,10 +163,9 @@ class UserController {
         const result = await axios.post(GITHUB.access_token_url, {
             client_id: GITHUB.client_id,
             client_secret: GITHUB.client_secret,
-            code,
+            code
         })
         console.log(result)
-
         // const { access_token } = decodeQuery(result.data)
 
         // if (access_token) {
