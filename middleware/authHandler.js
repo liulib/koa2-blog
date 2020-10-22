@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-21 11:45:10
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-21 14:41:20
+ * @LastEditTime : 2020-10-22 11:52:16
  */
 import { checkToken } from '../utils/token'
 
@@ -12,7 +12,8 @@ import { checkToken } from '../utils/token'
  * @required 'all': get post put delete 均需要权限。
  */
 const verifyList1 = [
-    { regexp: /\/user/, required: 'get, put, delete' } // 普通用户 禁止获取用户、修改用户、以及删除用户
+    { regexp: /\/user/, required: 'get, put, delete' }, // 普通用户 禁止获取用户、修改用户、以及删除用户
+    { regexp: /\/category/, required: 'get, post, put, delete' } // 普通用户 禁止获取、创建、修改、以及删除分类
 ]
 
 // role === 2 需要权限的路由
@@ -56,8 +57,8 @@ function checkAuth(method, url) {
     return roleList
 }
 
-export default function () {
-    return async (ctx, next) => {
+export const authHandler = function () {
+    return async function (ctx, next) {
         const roleList = checkAuth(ctx.method, ctx.url)
         //  该路由需要验证
         if (roleList.length > 0) {

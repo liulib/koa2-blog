@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-21 10:40:19
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-21 11:45:26
+ * @LastEditTime : 2020-10-22 11:41:23
  */
 export const routerResponse = function (option = {}) {
     return async function (ctx, next) {
@@ -16,7 +16,7 @@ export const routerResponse = function (option = {}) {
             }
         }
 
-        ctx.fail = function (msg, code) {
+        ctx.fail = function (code, msg) {
             ctx.type = option.type || 'json'
             ctx.body = {
                 code: code || option.failCode || 99,

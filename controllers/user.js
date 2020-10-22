@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-21 14:28:19
+ * @LastEditTime : 2020-10-22 15:42:15
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -39,6 +39,7 @@ class UserController {
                 startTime,
                 endTime
             } = ctx.query
+            // 构造查询参数
             const where = {}
             if (username) {
                 where.username = {}
@@ -51,7 +52,6 @@ class UserController {
                 where,
                 offset: (page - 1) * pageSize,
                 limit: parseInt(pageSize),
-                row: true,
                 order: [['createdAt', 'DESC']],
                 attributes: { exclude: ['password'] }
             })

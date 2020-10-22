@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:04:08
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-21 14:41:46
+ * @LastEditTime : 2020-10-22 10:09:39
  */
 import Koa from 'koa'
 import { PORT } from './config/index'
@@ -17,9 +17,7 @@ import routers from './routers/index'
 // 引入自定义中间件
 import { routerResponse } from './middleware/routerResponse'
 import { authHandler } from './middleware/authHandler'
-app.use(routerResponse())
-app.use(authHandler)
-app.use(koaBody())
+app.use(routerResponse()).use(authHandler()).use(koaBody())
 
 // 绑定上下文对象
 Object.keys(context).forEach(key => {

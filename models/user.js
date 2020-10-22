@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:29:22
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 23:32:01
+ * @LastEditTime : 2020-10-22 11:29:34
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -19,41 +19,46 @@ User.init(
             primaryKey: true,
             allowNull: false,
             autoIncrement: true,
-            comment: 'id',
+            comment: 'id'
         },
         username: {
             type: DataTypes.STRING(50),
             allowNull: false,
             unique: true,
-            comment: '用户名',
+            comment: '用户名'
         },
         password: {
             type: DataTypes.STRING,
-            comment: '密码',
+            comment: '密码'
         },
         email: {
             type: DataTypes.STRING(50),
-            comment: '邮箱',
-        },
-        nickname: {
-            type: DataTypes.STRING(20),
-            allowNull: true,
-            comment: '昵称',
+            comment: '邮箱'
         },
         role: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
-            comment: '用户角色：0 - admin, 1 - 普通用户',
+            defaultValue: 1,
+            comment: '用户角色：1 - admin, 2 - 普通用户'
         },
         github: {
             type: DataTypes.TEXT,
-            comment: 'github 登录用户 直接绑定在 user 表',
+            comment: 'github 登录用户 直接绑定在 user 表'
         },
+        notice: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+            comment: '是否开启邮件通知'
+        },
+        disabledDiscuss: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            comment: '是否禁言'
+        }
     },
     {
         sequelize,
         modelName: 'User',
-        tableName: 'user',
+        tableName: 'user'
     }
 )
 

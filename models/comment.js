@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-20 09:12:17
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 09:58:17
+ * @LastEditTime : 2020-10-22 15:19:12
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -54,21 +54,21 @@ Comment.init(
 
 // 评论关联文章
 Article.hasMany(Comment, {
-    foreignKey: 'article_id',
+    foreignKey: 'articleId',
     sourceKey: 'id',
     as: 'comment'
 })
 
 // 评论关联用户
 Comment.belongsTo(User, {
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
     targetKey: 'id',
     as: 'user'
 })
 
 // 评论关联自身
 Comment.belongsTo(Comment, {
-    foreignKey: 'parent_id',
+    foreignKey: 'parentId',
     targetKey: 'id',
     as: 'parent'
 })

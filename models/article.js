@@ -3,11 +3,12 @@
  * @Author       : liulib
  * @Date         : 2020-10-19 15:26:37
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-20 09:42:05
+ * @LastEditTime : 2020-10-22 15:19:29
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
 import Category from './category'
+import Tag from './tag'
 
 // 定义文章模型
 class Article extends Model {}
@@ -28,20 +29,19 @@ Article.init(
             comment: '标题'
         },
         brief: {
-            type: DataTypes.STRING(),
+            type: DataTypes.STRING,
             allowNull: false,
             defaultValue: '',
             comment: '简介'
         },
         content: {
-            type: DataTypes.STRING(),
+            type: DataTypes.TEXT,
             allowNull: false,
             comment: '内容'
         },
         page_views: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
-            allowNull: false,
             comment: '浏览数'
         },
         keyword: {
@@ -60,9 +60,14 @@ Article.init(
 
 // 文章关联分类
 Article.belongsTo(Category, {
-    foreignKey: 'category_id',
+    foreignKey: 'categoryId',
     targetKey: 'id',
     as: 'category'
 })
+
+// 文章关联标签
+Article.belongsToMany(Tag, { through: 'ArticleTags' })
+// Tag关联文章
+Tag.belongsToMany(Article, { through: 'ArticleTags' })
 
 export default Article
