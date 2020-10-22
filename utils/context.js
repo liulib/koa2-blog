@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-17 22:54:10
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 11:41:50
+ * @LastEditTime : 2020-10-22 17:08:24
  */
 
 /**
@@ -18,7 +18,7 @@ async function validate(params = {}, schema = {}) {
         await schema.validateAsync(params)
         return true
     } catch (error) {
-        ctx.fail(200, error.message)
+        ctx.parseRes(200, null, error.message)
         return false
     }
 }

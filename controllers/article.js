@@ -3,11 +3,11 @@
  * @Author       : liulib
  * @Date         : 2020-10-20 00:02:07
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 15:21:53
+ * @LastEditTime : 2020-10-22 17:30:08
  */
 import Article from '../models/article'
 import Category from '../models/category'
-import Tags from '../models/tag'
+import Tag from '../models/tag'
 import Joi from 'joi'
 
 class ArticleController {
@@ -24,9 +24,9 @@ class ArticleController {
                 endTime: Joi.string(),
                 page: Joi.number(),
                 pageSize: Joi.number(),
-                category: Joi.string(),
-                tag: Joi.string(),
-                order: Joi.string()
+                categoryId: Joi.string(),
+                tagId: Joi.number(),
+                order: Joi.number()
             })
         )
         if (val) {
@@ -36,14 +36,17 @@ class ArticleController {
                 keyword,
                 startTime,
                 endTime,
-                category,
-                tag,
+                categoryId,
+                tagId,
                 order
             } = ctx.query
             // 构造查询参数
             const where = {}
-            // const tagFilter = tag ? { name: tag } : null
-            // const categoryFilter = category ? { name: category } : null
+            // 分类和标签查询
+            console.log(ctx.query)
+            const tagFilter = tagId ? { id: tagId } : null
+            console.log(tagFilter)
+            const categoryFilter = categoryId ? { id: categoryId } : null
             if (keyword) {
                 where.keyword = {}
                 where.keyword['$like'] = `%${keyword}%`
@@ -59,11 +62,12 @@ class ArticleController {
 
             const result = await Article.findAndCountAll({
                 where,
+                include: [{ model: Tag, attributes: ['id'], where: tagFilter }],
                 offset: (page - 1) * pageSize,
                 limit: parseInt(pageSize),
                 order: articleOrder
             })
-            ctx.body = result
+            ctx.parseRes(200, result, '查询成功')
         }
     }
     /**
@@ -77,20 +81,50 @@ class ArticleController {
                 title: Joi.string().required(),
                 brief: Joi.string().required(),
                 content: Joi.string().required(),
-                keyword: Joi.string().required()
+                keyword: Joi.string().required(),
+                categoryId: Joi.number().required(),
+                tagsId: Joi.array()
             })
         )
         if (val) {
-            const { title, brief, content, keyword } = ctx.request.body
-            // 创建分类
-            await Article.create({
+            const {
                 title,
                 brief,
                 content,
-                keyword
+                keyword,
+                tagsId,
+                categoryId
+            } = ctx.request.body
+
+            // 查询分类是否存在
+            const category = await Category.findAll({
+                where: {
+                    id: categoryId
+                }
             })
-            // 返回数据
-            ctx.success(200, '创建成功', null)
+            // 不存在分类则不进行创建
+            if (category.length < 1) {
+                ctx.parseRes(200, null, '请选择分类')
+            } else {
+                // 判断标签是否都存在
+                const tags = await Tag.findAll({ where: { id: tagsId } })
+                if (tags.length !== tagsId.length) {
+                    ctx.parseRes(200, null, '请选择标签')
+                } else {
+                    // 创建文章
+                    const newArticle = await Article.create({
+                        title,
+                        brief,
+                        content,
+                        keyword,
+                        categoryId
+                    })
+                    // 为ArticleTags表添加记录
+                    await newArticle.setTags(tags)
+                    // 返回数据
+                    ctx.parseRes(200, null, '创建成功')
+                }
+            }
         }
     }
 }

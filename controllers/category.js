@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-19 23:04:18
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 15:39:55
+ * @LastEditTime : 2020-10-22 16:47:05
  */
 import Category from '../models/category'
 import Joi from 'joi'
@@ -14,7 +14,7 @@ class CategoryController {
      */
     static async getList(ctx) {
         const result = await Category.findAndCountAll()
-        ctx.success(200, result, '查询成功')
+        ctx.parseRes(200, result, '查询成功')
     }
     /**
      * @description: 创建分类
@@ -36,7 +36,7 @@ class CategoryController {
                 parentId
             })
             // 返回数据
-            ctx.success(200, '创建成功', null)
+            ctx.parseRes(200, '创建成功', null)
         }
     }
     /**
@@ -67,7 +67,7 @@ class CategoryController {
                 { where: { id: categoryId } }
             )
             // 返回数据
-            ctx.success(200, '更新成功', null)
+            ctx.parseRes(200, '更新成功', null)
         }
     }
 }

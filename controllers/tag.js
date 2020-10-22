@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-22 14:17:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 15:44:27
+ * @LastEditTime : 2020-10-22 16:46:39
  */
 import Tag from '../models/tag'
 import Joi from 'joi'
@@ -15,7 +15,7 @@ class TagController {
     static async getList(ctx) {
         const result = await Tag.findAndCountAll()
         // 返回数据
-        ctx.success(200, result, '创建成功')
+        ctx.parseRes(200, result, '查询成功')
     }
     /**
      * @description: 创建标签
@@ -35,7 +35,7 @@ class TagController {
                 name
             })
             // 返回数据
-            ctx.success(200, null, '创建成功')
+            ctx.parseRes(200, null, '创建成功')
         }
     }
     /**
@@ -64,7 +64,7 @@ class TagController {
                 { where: { id: tagId } }
             )
             // 返回数据
-            ctx.success(200, '更新成功', null)
+            ctx.parseRes(200, '更新成功', null)
         }
     }
 }

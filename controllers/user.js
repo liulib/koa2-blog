@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 15:42:15
+ * @LastEditTime : 2020-10-22 16:46:32
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -55,7 +55,7 @@ class UserController {
                 order: [['createdAt', 'DESC']],
                 attributes: { exclude: ['password'] }
             })
-            ctx.success(200, result, '查询成功')
+            ctx.parseRes(200, result, '查询成功')
         }
     }
     /**
@@ -94,7 +94,7 @@ class UserController {
                 nickname
             })
             // 返回数据
-            ctx.success(200, '用户创建成功', null)
+            ctx.parseRes(200, null, '用户创建成功')
         }
     }
     /**
@@ -144,7 +144,7 @@ class UserController {
                         role
                     }) // 生成 token
                     // ctx.client(200, '登录成功', { username: user.username, role, userId: id, token })
-                    ctx.success(
+                    ctx.parseRes(
                         200,
                         {
                             username: user.username,
