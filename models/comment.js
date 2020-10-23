@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-20 09:12:17
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 15:19:12
+ * @LastEditTime : 2020-10-23 10:18:24
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -29,17 +29,17 @@ Comment.init(
             unique: true,
             comment: '评论内容'
         },
-        parent_id: {
+        parentId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             comment: '父评论id,顶级评论无父级id'
         },
-        user_id: {
+        userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             comment: '评论人的id'
         },
-        article_id: {
+        articleId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             comment: '评论的文章id'

@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 16:46:32
+ * @LastEditTime : 2020-10-23 09:27:38
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -22,7 +22,7 @@ class UserController {
     static async getList(ctx) {
         // 验证参数
         const val = await ctx.validate(
-            ctx.request.body,
+            ctx.query,
             Joi.object({
                 username: Joi.string().allow(''),
                 startTime: Joi.string(),

@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-10-19 15:26:37
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 15:19:29
+ * @LastEditTime : 2020-10-23 10:09:45
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -39,7 +39,7 @@ Article.init(
             allowNull: false,
             comment: '内容'
         },
-        page_views: {
+        pageViews: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             comment: '浏览数'
