@@ -3,13 +3,14 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:04:08
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 10:09:39
+ * @LastEditTime : 2020-10-23 16:28:37
  */
 import Koa from 'koa'
 import { PORT } from './config/index'
 import koaBody from 'koa-body'
 import context from './utils/context'
-
+import sequelize from './models/sequelize'
+import initData from './initData'
 const app = new Koa()
 
 // 引入路由
@@ -17,6 +18,7 @@ import routers from './routers/index'
 // 引入自定义中间件
 import { routerResponse } from './middleware/routerResponse'
 import { authHandler } from './middleware/authHandler'
+
 app.use(routerResponse()).use(authHandler()).use(koaBody())
 
 // 绑定上下文对象
@@ -32,8 +34,21 @@ app.use(async ctx => {
 })
 
 app.listen(PORT, () => {
-    console.log(`===============================================
+    sequelize
+        .sync({ force: false })
+        .then(async () => {
+            // 初始化数据
+            initData()
+            console.log('sequelize connect success')
+            console.log(
+                '\x1b[91m',
+                `===============================================
     app is running at http://127.0.0.1:${PORT}
-===============================================
-    `)
+ ===============================================
+    `
+            )
+        })
+        .catch(err => {
+            console.log(err)
+        })
 })

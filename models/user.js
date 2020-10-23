@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:29:22
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-22 11:29:34
+ * @LastEditTime : 2020-10-23 14:52:56
  */
 import { DataTypes, Model } from 'sequelize'
 import sequelize from './sequelize'
@@ -37,7 +37,7 @@ User.init(
         },
         role: {
             type: DataTypes.INTEGER,
-            defaultValue: 1,
+            defaultValue: 2,
             comment: '用户角色：1 - admin, 2 - 普通用户'
         },
         github: {
