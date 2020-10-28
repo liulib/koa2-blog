@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-23 16:15:31
+ * @LastEditTime : 2020-10-28 16:42:40
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -70,9 +70,8 @@ class UserController {
     }
     // 创建github用户
     static createGithubUser(data, role = 2) {
-        const { id, login, email } = data
+        const { login, email } = data
         return User.create({
-            id,
             username: login,
             role,
             email,
@@ -147,6 +146,8 @@ class UserController {
             if (!user) {
                 ctx.throw(403, '用户不存在')
             } else {
+                console.log(password)
+                console.log(user.password)
                 const isMatch = await comparePassword(password, user.password)
                 if (!isMatch) {
                     ctx.throw(403, '密码不正确')
