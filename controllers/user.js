@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-28 16:42:40
+ * @LastEditTime : 2020-10-29 11:08:17
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -284,8 +284,9 @@ class UserController {
     static async initAdminUser(githubLoginName) {
         try {
             const github = await getGithubInfo(githubLoginName)
-            // console.log(github)
-            const temp = await User.findOne({ where: { id: github.id } })
+            const temp = await User.findOne({
+                where: { username: github.login }
+            })
             if (!temp) {
                 UserController.createGithubUser(github, 1)
             }
