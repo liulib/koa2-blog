@@ -11,6 +11,7 @@ import koaBody from 'koa-body'
 import context from './utils/context'
 import sequelize from './models/sequelize'
 import initData from './initData'
+import cors from '@koa/cors'
 const app = new Koa()
 
 // 引入路由
@@ -19,7 +20,7 @@ import routers from './routers/index'
 import { routerResponse } from './middleware/routerResponse'
 import { authHandler } from './middleware/authHandler'
 
-app.use(routerResponse()).use(authHandler()).use(koaBody())
+app.use(routerResponse()).use(authHandler()).use(koaBody()).use(cors())
 
 // 绑定上下文对象
 Object.keys(context).forEach(key => {
