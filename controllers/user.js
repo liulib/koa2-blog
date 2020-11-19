@@ -3,7 +3,7 @@
  * @Author       : liulib
  * @Date         : 2020-09-12 23:59:56
  * @LastEditors  : liulib
- * @LastEditTime : 2020-10-29 15:07:11
+ * @LastEditTime : 2020-11-04 10:40:15
  */
 import Joi from 'joi'
 import axios from 'axios'
@@ -115,16 +115,6 @@ class UserController {
             ctx.parseRes(200, null, '用户创建成功')
         }
     }
-    // 登录
-    static async login(ctx) {
-        const { code } = ctx.request.body
-        // 判断是否github登录
-        if (code) {
-            await UserController.githubLogin(ctx, code)
-        } else {
-            await UserController.defaultLogin(ctx)
-        }
-    }
     // 站内用户登录
     static async defaultLogin(ctx) {
         // 验证参数
@@ -179,71 +169,81 @@ class UserController {
             }
         }
     }
-    /**
-     * @description: github 登录
-     * @param {String} code 请求code
-     */
-    static async githubLogin(ctx, code) {
-        const res = await axios.post(GITHUB.access_token_url, {
-            client_id: GITHUB.client_id,
-            client_secret: GITHUB.client_secret,
-            code
-        })
-        // 获取返回数据 判断是否存在access_token 不存在说明授权失败
-        const { access_token } = decodeParams(res.data)
-        if (access_token) {
-            // 使用access_token获取用户信息
-            const res2 = await axios.get(
-                `${GITHUB.fetch_user_url}?access_token=${access_token}`
-            )
-            const githubInfo = res2.data
-            // 查找是否注册过
-            let target = await User.findOne({ where: { id: githubInfo.id } })
-            // 不存在就是用相关数据创建用户
-            if (!target) {
-                target = await User.create({
-                    id: githubInfo.id,
-                    username: githubInfo.name || githubInfo.username,
-                    github: JSON.stringify(githubInfo),
-                    email: githubInfo.email
-                })
-            } else {
-                // github 信息发生了变动
-                if (target.github !== JSON.stringify(githubInfo)) {
-                    const { id, login, email } = githubInfo
-                    const data = {
-                        username: login,
-                        email,
-                        github: JSON.stringify(githubInfo)
-                    }
-                    // 更新用户信息
-                    await UserController.updateUserById(id, data)
-                }
-            }
-            // 生成 token
-            const token = createToken({
-                username: target.username,
-                userId: target.id,
-                role: target.role
+
+    // github 登录
+    static async githubLogin(ctx) {
+        // 验证参数
+        const val = await ctx.validate(
+            ctx.request.body,
+            Joi.object({
+                code: Joi.string().required()
             })
-            // 记录ip地址
-            const ip = getClientIp(ctx)
-            if (ip) {
-                Ip.create({ ip, userId: target.id })
-            }
-            // 返回消息
-            ctx.parseRes(
-                200,
-                {
+        )
+        if (val) {
+            const { code } = ctx.request.body
+            const res = await axios.post(GITHUB.access_token_url, {
+                client_id: GITHUB.client_id,
+                client_secret: GITHUB.client_secret,
+                code
+            })
+            // 获取返回数据 判断是否存在access_token 不存在说明授权失败
+            const { access_token } = decodeParams(res.data)
+            if (access_token) {
+                // 使用access_token获取用户信息
+                const res2 = await axios.get(
+                    `${GITHUB.fetch_user_url}?access_token=${access_token}`
+                )
+                const githubInfo = res2.data
+                // 查找是否注册过
+                let target = await User.findOne({
+                    where: { id: githubInfo.id }
+                })
+                // 不存在就是用相关数据创建用户
+                if (!target) {
+                    target = await User.create({
+                        id: githubInfo.id,
+                        username: githubInfo.name || githubInfo.username,
+                        github: JSON.stringify(githubInfo),
+                        email: githubInfo.email
+                    })
+                } else {
+                    // github 信息发生了变动
+                    if (target.github !== JSON.stringify(githubInfo)) {
+                        const { id, login, email } = githubInfo
+                        const data = {
+                            username: login,
+                            email,
+                            github: JSON.stringify(githubInfo)
+                        }
+                        // 更新用户信息
+                        await UserController.updateUserById(id, data)
+                    }
+                }
+                // 生成 token
+                const token = createToken({
                     username: target.username,
-                    role,
                     userId: target.id,
-                    token
-                },
-                '登录成功'
-            )
-        } else {
-            ctx.throw(403, 'github 授权码已失效！')
+                    role: target.role
+                })
+                // 记录ip地址
+                const ip = getClientIp(ctx)
+                if (ip) {
+                    Ip.create({ ip, userId: target.id })
+                }
+                // 返回消息
+                ctx.parseRes(
+                    200,
+                    {
+                        username: target.username,
+                        role,
+                        userId: target.id,
+                        token
+                    },
+                    '登录成功'
+                )
+            } else {
+                ctx.throw(403, 'github 授权码已失效！')
+            }
         }
     }
     /**
