@@ -1,32 +1,39 @@
 {
-  "name": "koa2-blog",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node app.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@koa/cors": "^3.1.0",
-    "axios": "^0.20.0",
-    "bcrypt": "^5.0.0",
-    "dayjs": "^1.9.3",
-    "joi": "^17.2.1",
-    "jsonwebtoken": "^8.5.1",
-    "koa": "^2.13.0",
-    "koa-body": "^4.2.0",
-    "koa-router": "^9.4.0",
-    "mysql2": "^2.1.0",
-    "sequelize": "^6.3.5"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/node": "^7.10.5",
-    "@babel/preset-env": "^7.11.5",
-    "nodemon": "^2.0.4"
-  }
+    "name": "koa2-blog",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "cross-env NODE_ENV=development npx webpack --mode development",
+        "build": "webpack --config ./webpack.config.js --mode production",
+        "start": "nodemon --exec babel-node ./src/app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/runtime": "^7.12.5",
+        "@koa/cors": "^3.1.0",
+        "axios": "^0.20.0",
+        "bcrypt": "^5.0.0",
+        "cross-env": "^7.0.2",
+        "dayjs": "^1.9.3",
+        "joi": "^17.2.1",
+        "jsonwebtoken": "^8.5.1",
+        "koa": "^2.13.0",
+        "koa-body": "^4.2.0",
+        "koa-router": "^9.4.0",
+        "mysql2": "^2.1.0",
+        "sequelize": "^6.3.5"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.11.6",
+        "@babel/core": "^7.12.3",
+        "@babel/node": "^7.10.5",
+        "@babel/plugin-transform-runtime": "^7.12.1",
+        "@babel/preset-env": "^7.12.1",
+        "babel-loader": "^8.2.1",
+        "nodemon": "^2.0.4",
+        "webpack": "^5.5.1",
+        "webpack-cli": "^4.2.0"
+    }
 }
